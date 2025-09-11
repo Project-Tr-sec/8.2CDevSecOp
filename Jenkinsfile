@@ -1,14 +1,12 @@
 pipeline {
     agent any
     options { timestamps() }
-    triggers { pollSCM('H/5 * * * *') } // poll ~every 5 minutes
+    triggers { pollSCM('* * * * *') } // poll ~every 5 minutes
 
     stages {
         stage('Checkout') {
             steps {
-                // Uses the job's configured SCM; if you prefer hardcoding:
-                // git branch: 'main', url: 'https://github.com/<your_user>/8.2CDevSecOps.git'
-                checkout scm
+                git branch: 'main', 'url:'https://github.com/Project-Tr-sec/8.2CDevSecOp.git
             }
         }
 
@@ -20,14 +18,12 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                // continue even if tests fail (for assignment demo)
                 bat 'cmd /c npm test || exit /b 0'
             }
         }
 
         stage('Generate Coverage Report') {
             steps {
-                // not all forks expose coverage script; don't fail the build if missing
                 bat 'cmd /c npm run coverage || exit /b 0'
             }
         }
@@ -40,10 +36,4 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            // handy for your submission artifact
-            archiveArtifacts artifacts: 'coverage/**/*, npm-debug.log*', allowEmptyArchive: true
-        }
-    }
 }
