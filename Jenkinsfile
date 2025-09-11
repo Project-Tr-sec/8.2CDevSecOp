@@ -1,7 +1,7 @@
 pipeline {
     agent any
     options { timestamps() }
-    triggers { pollSCM('* * * * *') } // poll ~every 5 minutes
+    triggers { pollSCM('* * * * *') } // poll ~every 1 minutes
 
     stages {
         stage('Checkout') {
